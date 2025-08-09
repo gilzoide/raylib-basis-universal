@@ -1,9 +1,7 @@
 #include "raylib_basis_universal.h"
 
 #include "external/basis_universal/transcoder/basisu_transcoder.h"
-#include "raylib.h"
 
-#include <cstdint>
 #include <rlgl.h>
 
 static bool is_basisu_initialized = false;
@@ -172,8 +170,14 @@ Image LoadBasisUniversalImageFromMemory(const char *fileType, const unsigned cha
 	Image image = { 0 };
 
 	// Security check for input data
-	if ((fileData == NULL) || (dataSize == 0) || (fileType == NULL))
+	if ((fileData == nullptr) || (dataSize == 0))
 	{
+		BASISU_DEVEL_ERROR("IMAGE: Invalid file data\n");
+		return image;
+	}
+	if (fileType == nullptr)
+	{
+		BASISU_DEVEL_ERROR("IMAGE: Missing file extension\n");
 		return image;
 	}
 
@@ -190,6 +194,13 @@ Image LoadBasisUniversalImageFromMemory(const char *fileType, const unsigned cha
 		image.data = load_ktx2_from_memory(fileData, dataSize, &image.width, &image.height, &image.format, &image.mipmaps);
 	}
 #endif  // BASISD_SUPPORT_KTX2
+	else {
+		BASISU_DEVEL_ERROR("IMAGE: Data format not supported (\"%s\")\n", fileType);
+	}
+
+	if (image.data == nullptr) {
+		BASISU_DEVEL_ERROR("IMAGE: Failed to load image data\n");
+	}
 
 	return image;
 }
