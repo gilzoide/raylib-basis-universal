@@ -205,11 +205,11 @@ Texture LoadBasisUniversalTexture(const char *fileName) {
 	return texture;
 }
 
-void ConfigureRgbTextureFormat(PixelFormat pixelFormat) {
+void SetBasisUniversalRgbPixelFormat(PixelFormat pixelFormat) {
 	rgb_texture_format = to_transcoder_texture_format(pixelFormat);
 }
 
-void ConfigureRgbaTextureFormat(PixelFormat pixelFormat) {
+void SetBasisUniversalRgbaPixelFormat(PixelFormat pixelFormat) {
 	rgba_texture_format = to_transcoder_texture_format(pixelFormat);
 }
 

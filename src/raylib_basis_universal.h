@@ -55,7 +55,7 @@ Texture LoadBasisUniversalTexture(const char *fileName);
  * - PIXELFORMAT_UNCOMPRESSED_R16G16B16
  * - PIXELFORMAT_UNCOMPRESSED_R16G16B16A16
  */
-void ConfigureRgbTextureFormat(PixelFormat pixelFormat);
+void SetBasisUniversalRgbPixelFormat(PixelFormat pixelFormat);
 
 /**
  * Configure which pixel format will be used for RGBA (transparent) textures when loading Basis Universal images.
@@ -76,7 +76,7 @@ void ConfigureRgbTextureFormat(PixelFormat pixelFormat);
  * - PIXELFORMAT_UNCOMPRESSED_R16G16B16
  * - PIXELFORMAT_UNCOMPRESSED_R16G16B16A16
  */
-void ConfigureRgbaTextureFormat(PixelFormat pixelFormat);
+void SetBasisUniversalRgbaPixelFormat(PixelFormat pixelFormat);
 
 #ifdef __cplusplus
 }
