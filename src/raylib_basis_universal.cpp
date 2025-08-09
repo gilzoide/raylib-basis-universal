@@ -8,12 +8,15 @@
 
 static bool is_basisu_initialized = false;
 
-#ifdef __ANDROID__
-basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFETC2_RGBA;
-basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFETC1_RGB;
+#if defined(__EMSCRIPTEN__)  // use uncompressed format in web since we could be running on either mobile or desktop
+const basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFRGBA4444;
+const basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFRGB565;
+#elif defined(__ANDROID__)
+const basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFETC2_RGBA;
+const basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFETC1_RGB;
 #else
-basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFBC3_RGBA;
-basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFBC1_RGB;
+const basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFBC3_RGBA;
+const basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFBC1_RGB;
 #endif
 
 basist::transcoder_texture_format get_wanted_format(bool has_alpha) {
