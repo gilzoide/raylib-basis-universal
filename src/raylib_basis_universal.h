@@ -4,7 +4,8 @@
  * @see https://github.com/raysan5/raylib
  * @see https://github.com/BinomialLLC/basis_universal
  */
-#pragma once
+#ifndef __RAYLIB_BASIS_UNIVERSAL_H__
+#define __RAYLIB_BASIS_UNIVERSAL_H__
 
 #include <raylib.h>
 
@@ -38,3 +39,5 @@ Texture LoadBasisUniversalTexture(const char *fileName);
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // __RAYLIB_BASIS_UNIVERSAL_H__
