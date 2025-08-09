@@ -52,6 +52,7 @@ static void *load_basis_from_memory(const unsigned char *data, unsigned int data
 	if (!transcoder.get_image_info(data, data_size, image_info, 0) || !transcoder.start_transcoding(data, data_size)) {
 		return nullptr;
 	}
+	
 	basist::transcoder_texture_format output_format = get_wanted_format(image_info.m_alpha_flag);
 	bool output_format_is_uncompressed = basist::basis_transcoder_format_is_uncompressed(output_format);
 	uint32_t bytes_per_block_or_pixel = basist::basis_get_bytes_per_block_or_pixel(output_format);
@@ -79,6 +80,7 @@ static void *load_basis_from_memory(const unsigned char *data, unsigned int data
 		level_data += blocks_or_pixels * bytes_per_block_or_pixel;
 	}
 	transcoder.stop_transcoding();
+	
 	*height = image_info.m_height;
 	*width = image_info.m_width;
 	*format = to_rlPixelFormat(output_format);
@@ -94,15 +96,17 @@ static void *load_ktx2_from_memory(const unsigned char *data, unsigned int data_
 	}
 
 	basist::transcoder_texture_format output_format = get_wanted_format(transcoder.get_has_alpha());
-	uint32_t bytes_per_block = basist::basis_get_bytes_per_block_or_pixel(output_format);
-	uint32_t total_blocks = 0;
+	bool output_format_is_uncompressed = basist::basis_transcoder_format_is_uncompressed(output_format);
+	uint32_t bytes_per_block_or_pixel = basist::basis_get_bytes_per_block_or_pixel(output_format);
+	uint32_t total_blocks_or_pixels = 0;
 	void *image_data = nullptr;
 	unsigned char *level_data = nullptr;
 	for (int i = 0; i < transcoder.get_levels(); i++) {
 		basist::ktx2_image_level_info level_info;
 		transcoder.get_image_level_info(level_info, i, 0, 0);
-		total_blocks += level_info.m_total_blocks;
-		if (void *new_image_data = RL_REALLOC(image_data, total_blocks * bytes_per_block)) {
+		uint32_t blocks_or_pixels = output_format_is_uncompressed ? level_info.m_width * level_info.m_height : level_info.m_total_blocks;
+		total_blocks_or_pixels += blocks_or_pixels;
+		if (void *new_image_data = RL_REALLOC(image_data, total_blocks_or_pixels * bytes_per_block_or_pixel)) {
 			image_data = new_image_data;
 		}
 		else {
@@ -114,8 +118,8 @@ static void *load_ktx2_from_memory(const unsigned char *data, unsigned int data_
 		if (!level_data) {
 			level_data = (unsigned char *) image_data;
 		}
-		transcoder.transcode_image_level(i,0, 0, level_data, level_info.m_total_blocks, output_format);
-		level_data += level_info.m_total_blocks * bytes_per_block;
+		transcoder.transcode_image_level(i,0, 0, level_data, blocks_or_pixels, output_format);
+		level_data += blocks_or_pixels * bytes_per_block_or_pixel;
 	}
 	*height = transcoder.get_height();
 	*width = transcoder.get_width();
