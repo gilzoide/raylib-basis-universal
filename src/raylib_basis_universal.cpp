@@ -9,22 +9,22 @@
 static bool is_basisu_initialized = false;
 
 #if defined(__EMSCRIPTEN__)  // use uncompressed format in web since we could be running on either mobile or desktop
-const basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFRGBA4444;
-const basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFRGB565;
+basist::transcoder_texture_format rgba_texture_format = basist::transcoder_texture_format::cTFRGBA4444;
+basist::transcoder_texture_format rgb_texture_format = basist::transcoder_texture_format::cTFRGB565;
 #elif defined(__ANDROID__)
-const basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFETC2_RGBA;
-const basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFETC1_RGB;
+basist::transcoder_texture_format rgba_texture_format = basist::transcoder_texture_format::cTFETC2_RGBA;
+basist::transcoder_texture_format rgb_texture_format = basist::transcoder_texture_format::cTFETC1_RGB;
 #else
-const basist::transcoder_texture_format alpha_texture_format = basist::transcoder_texture_format::cTFBC3_RGBA;
-const basist::transcoder_texture_format opaque_texture_format = basist::transcoder_texture_format::cTFBC1_RGB;
+basist::transcoder_texture_format rgba_texture_format = basist::transcoder_texture_format::cTFBC3_RGBA;
+basist::transcoder_texture_format rgb_texture_format = basist::transcoder_texture_format::cTFBC1_RGB;
 #endif
 
-basist::transcoder_texture_format get_wanted_format(bool has_alpha) {
+static basist::transcoder_texture_format get_wanted_format(bool has_alpha) {
 	if (has_alpha) {
-		return alpha_texture_format;
+		return rgba_texture_format;
 	}
 	else {
-		return opaque_texture_format;
+		return rgb_texture_format;
 	}
 }
 
@@ -43,6 +43,24 @@ static rlPixelFormat to_rlPixelFormat(basist::transcoder_texture_format transcod
 		case basist::transcoder_texture_format::cTFRGB_HALF: return RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16;
 		case basist::transcoder_texture_format::cTFRGBA_HALF: return RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16;
 		default: return RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32;
+	}
+}
+
+static basist::transcoder_texture_format to_transcoder_texture_format(PixelFormat format) {
+	switch (format) {
+		case PIXELFORMAT_COMPRESSED_ETC1_RGB: return basist::transcoder_texture_format::cTFETC1_RGB;
+		case PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA: return basist::transcoder_texture_format::cTFETC2_RGBA;
+		case PIXELFORMAT_COMPRESSED_DXT1_RGB: return basist::transcoder_texture_format::cTFBC1_RGB;
+		case PIXELFORMAT_COMPRESSED_DXT5_RGBA: return basist::transcoder_texture_format::cTFBC3_RGBA;
+		case PIXELFORMAT_COMPRESSED_PVRT_RGB: return basist::transcoder_texture_format::cTFPVRTC1_4_RGB;
+		case PIXELFORMAT_COMPRESSED_PVRT_RGBA: return basist::transcoder_texture_format::cTFPVRTC1_4_RGBA;
+		case PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: return basist::transcoder_texture_format::cTFASTC_4x4_RGBA;
+		case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return basist::transcoder_texture_format::cTFRGBA32;
+		case PIXELFORMAT_UNCOMPRESSED_R5G6B5: return basist::transcoder_texture_format::cTFRGB565;
+		case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return basist::transcoder_texture_format::cTFRGBA4444;
+		case PIXELFORMAT_UNCOMPRESSED_R16G16B16: return basist::transcoder_texture_format::cTFRGB_HALF;
+		case PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return basist::transcoder_texture_format::cTFRGBA_HALF;
+		default: return basist::transcoder_texture_format::cTFRGBA32;
 	}
 }
 
@@ -185,6 +203,14 @@ Texture LoadBasisUniversalTexture(const char *fileName) {
 		UnloadImage(image);
 	}
 	return texture;
+}
+
+void ConfigureRgbTextureFormat(PixelFormat pixelFormat) {
+	rgb_texture_format = to_transcoder_texture_format(pixelFormat);
+}
+
+void ConfigureRgbaTextureFormat(PixelFormat pixelFormat) {
+	rgba_texture_format = to_transcoder_texture_format(pixelFormat);
 }
 
 #ifdef __cplusplus

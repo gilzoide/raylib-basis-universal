@@ -13,4 +13,4 @@ Load [raylib](https://github.com/raysan5/raylib) Images and Textures from `.basi
 
 
 ## TODO
-- [ ] Add support for setting which texture formats to use instead of forcing the defaults
+- [X] Add support for setting which texture formats to use instead of forcing the defaults

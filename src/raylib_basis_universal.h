@@ -36,6 +36,48 @@ Image LoadBasisUniversalImageFromMemory(const char *fileType, const unsigned cha
  */
 Texture LoadBasisUniversalTexture(const char *fileName);
 
+/**
+ * Configure which pixel format will be used for RGB (opaque) textures when loading Basis Universal images.
+ *
+ * By default, PIXELFORMAT_COMPRESSED_DXT1_RGB is used on Desktop, PIXELFORMAT_COMPRESSED_ETC1_RGB on Android and PIXELFORMAT_UNCOMPRESSED_R5G6B5 on Web.
+ *
+ * @note Only supported formats are:
+ * - PIXELFORMAT_COMPRESSED_ETC1_RGB
+ * - PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA
+ * - PIXELFORMAT_COMPRESSED_DXT1_RGB
+ * - PIXELFORMAT_COMPRESSED_DXT5_RGBA
+ * - PIXELFORMAT_COMPRESSED_PVRT_RGB
+ * - PIXELFORMAT_COMPRESSED_PVRT_RGBA
+ * - PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA
+ * - PIXELFORMAT_UNCOMPRESSED_R32G32B32A32
+ * - PIXELFORMAT_UNCOMPRESSED_R5G6B5
+ * - PIXELFORMAT_UNCOMPRESSED_R4G4B4A4
+ * - PIXELFORMAT_UNCOMPRESSED_R16G16B16
+ * - PIXELFORMAT_UNCOMPRESSED_R16G16B16A16
+ */
+void ConfigureRgbTextureFormat(PixelFormat pixelFormat);
+
+/**
+ * Configure which pixel format will be used for RGBA (transparent) textures when loading Basis Universal images.
+ *
+ * By default, PIXELFORMAT_COMPRESSED_DXT5_RGBA is used on Desktop, PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA on Android and PIXELFORMAT_UNCOMPRESSED_R4G4B4A4 on Web.
+ *
+ * @note Only supported formats are:
+ * - PIXELFORMAT_COMPRESSED_ETC1_RGB
+ * - PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA
+ * - PIXELFORMAT_COMPRESSED_DXT1_RGB
+ * - PIXELFORMAT_COMPRESSED_DXT5_RGBA
+ * - PIXELFORMAT_COMPRESSED_PVRT_RGB
+ * - PIXELFORMAT_COMPRESSED_PVRT_RGBA
+ * - PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA
+ * - PIXELFORMAT_UNCOMPRESSED_R32G32B32A32
+ * - PIXELFORMAT_UNCOMPRESSED_R5G6B5
+ * - PIXELFORMAT_UNCOMPRESSED_R4G4B4A4
+ * - PIXELFORMAT_UNCOMPRESSED_R16G16B16
+ * - PIXELFORMAT_UNCOMPRESSED_R16G16B16A16
+ */
+void ConfigureRgbaTextureFormat(PixelFormat pixelFormat);
+
 #ifdef __cplusplus
 }
 #endif
