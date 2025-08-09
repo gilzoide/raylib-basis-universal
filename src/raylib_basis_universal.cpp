@@ -134,31 +134,31 @@ Image LoadBasisUniversalImage(const char *fileName) {
 
 	// Loading file to memory
 	int dataSize = 0;
-    unsigned char *fileData = LoadFileData(fileName, &dataSize);
+	unsigned char *fileData = LoadFileData(fileName, &dataSize);
 
 	// Loading image from memory data
-    if (fileData != nullptr)
-    {
-        image = LoadBasisUniversalImageFromMemory(GetFileExtension(fileName), fileData, dataSize);
-        UnloadFileData(fileData);
-    }
+	if (fileData != nullptr)
+	{
+		image = LoadBasisUniversalImageFromMemory(GetFileExtension(fileName), fileData, dataSize);
+		UnloadFileData(fileData);
+	}
 
-    return image;
+	return image;
 }
 
 Image LoadBasisUniversalImageFromMemory(const char *fileType, const unsigned char *fileData, int dataSize) {
+	Image image = { 0 };
+
+	// Security check for input data
+	if ((fileData == NULL) || (dataSize == 0) || (fileType == NULL))
+	{
+		return image;
+	}
+
 	if (!is_basisu_initialized) {
 		basist::basisu_transcoder_init();
 		is_basisu_initialized = true;
 	}
-
-	Image image = { 0 };
-
-    // Security check for input data
-    if ((fileData == NULL) || (dataSize == 0) || (fileType == NULL))
-    {
-        return image;
-    }
 
 	if ((strcmp(fileType, ".basis") == 0) || (strcmp(fileType, ".BASIS") == 0)) {
 		image.data = load_basis_from_memory(fileData, dataSize, &image.width, &image.height, &image.format, &image.mipmaps);
@@ -174,13 +174,13 @@ Image LoadBasisUniversalImageFromMemory(const char *fileType, const unsigned cha
 
 Texture LoadBasisUniversalTexture(const char *fileName) {
 	Texture2D texture = { 0 };
-    Image image = LoadBasisUniversalImage(fileName);
-    if (image.data != nullptr)
-    {
-        texture = LoadTextureFromImage(image);
-        UnloadImage(image);
-    }
-    return texture;
+	Image image = LoadBasisUniversalImage(fileName);
+	if (image.data != nullptr)
+	{
+		texture = LoadTextureFromImage(image);
+		UnloadImage(image);
+	}
+	return texture;
 }
 
 #ifdef __cplusplus
