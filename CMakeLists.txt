@@ -4,7 +4,13 @@ project(raylib_basis_universal C CXX)
 
 option(RAYLIB_BASIS_UNIVERSAL_SHARED "Build raylib_basis_universal as a shared library" ${BUILD_SHARED_LIBS})
 
-option(BASISU_FORCE_DEVEL_MESSAGES "Enable debug printf()'s whenever an error occurs, for easier debugging during development" OFF)
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+  set(DEFAULT_BASISU_FORCE_DEVEL_MESSAGES ON)
+else()
+  set(DEFAULT_BASISU_FORCE_DEVEL_MESSAGES OFF)
+endif()
+
+option(BASISU_FORCE_DEVEL_MESSAGES "Enable debug printf()'s whenever an error occurs, for easier debugging during development" ${DEFAULT_BASISU_FORCE_DEVEL_MESSAGES})
 option(BASISD_SUPPORT_KTX2 "Enable KTX2 support as well as Zstd/miniz usage which is only required for UASTC supercompression in KTX2 files" ON)
 option(BASISD_SUPPORT_KTX2_ZSTD "Enable KTX2 UASTC Zstd supercompression support " ON)
 
